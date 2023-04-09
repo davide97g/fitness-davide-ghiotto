@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite --port 8080",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pwa": "npm run build && npm run pwa:preview",
+    "pwa:icons": "npx vue-pwa-asset-generator -a ./src/assets/img/logo.png -o public/img/icons --no-manifest",
+    "pwa:preview": "vite --config vite.config.js preview"
   },
   "dependencies": {
     "@swc/helpers": "^0.5.0",
@@ -19,6 +22,8 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "typescript": "^4.9.3",
-    "vite": "^4.2.0"
+    "vite": "^4.2.0",
+    "vite-plugin-pwa": "^0.14.7",
+    "workbox-precaching": "^6.5.4"
   }
 }
