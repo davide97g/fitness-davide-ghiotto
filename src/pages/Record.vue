@@ -17,7 +17,7 @@
 		</a-tab-pane>
 	</a-tabs>
 	<div class="flex-center" style="justify-content: space-around">
-		<PrimaryButton text="NEW WEIGHT" @click="() => console.info('new weight')" />
+		<PrimaryButton text="NEW WEIGHT" @click="router.push({ name: NewRecordPageName })" />
 	</div>
 </template>
 
@@ -25,9 +25,10 @@
 import { SettingOutlined } from '@ant-design/icons-vue/lib/icons';
 import { ref } from 'vue';
 import Avatar from '../components/Avatar.vue';
-import Settings from '../components/Weight/Settings/Settings.vue';
+import Settings from '../components/Settings/Settings.vue';
 import PrimaryButton from '../components/shared/PrimaryButton.vue';
 import { MONTHS, YEARS } from '../services/utils';
+import { NewRecordPageName, router } from '../router';
 
 const activeMonth = ref(MONTHS[new Date().getMonth()]);
 const activeYear = ref(new Date().getFullYear().toString());

@@ -11,6 +11,7 @@ export const HomePageName = 'Home';
 export const LoginPageName = 'Login';
 export const ProfilePageName = 'Profile';
 export const RecordPageName = 'Record';
+export const NewRecordPageName = 'NewRecord';
 
 const loggedInGuard = async (
 	to: RouteLocationNormalized,
@@ -49,6 +50,12 @@ const routes = [
 		path: '/weight',
 		name: RecordPageName,
 		component: () => import('../pages/Record.vue'),
+		beforeEnter: loggedInGuard,
+	},
+	{
+		path: '/new-weight',
+		name: NewRecordPageName,
+		component: () => import('../pages/NewWeight.vue'),
 		beforeEnter: loggedInGuard,
 	},
 	{ path: '/:pathMatch(.*)*', redirect: '/' },
