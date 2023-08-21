@@ -1,10 +1,13 @@
 <template>
-	<a-button type="primary" class="primary-button" @click="emits('click')">{{ text }}</a-button>
+	<a-button type="primary" :disabled="disabled" class="primary-button" @click="emits('click')">{{
+		text
+	}}</a-button>
 </template>
 
 <script setup lang="ts">
 defineProps<{
 	text: string;
+	disabled?: boolean;
 }>();
 
 const emits = defineEmits(['click']);
