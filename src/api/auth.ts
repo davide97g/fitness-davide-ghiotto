@@ -35,10 +35,9 @@ export const checkUserIsLoggedIn = () => {
 			auth,
 			async user => {
 				setIsLoading(false);
-				if (user) {
-					useUserStore().setUser(user);
-					resolve(user);
-				} else reject(false);
+				useUserStore().setUser(user);
+				if (user) resolve(user);
+				else reject(false);
 			},
 			err => {
 				useUserStore().setUser(null);
