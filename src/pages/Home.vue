@@ -22,7 +22,7 @@
 				I'm sorry but the public areas of the website are still under construction.
 			</p>
 			<div class="flex-center column" v-else>
-				<router-link :to="{ name: RecordPageName }" class="m1">
+				<router-link :to="{ name: WeightPageName }" class="m1">
 					<a-button type="primary"> <HomeOutlined /> Weight</a-button>
 				</router-link>
 			</div>
@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import { HomeOutlined } from '@ant-design/icons-vue';
-import Avatar from '../components/Avatar.vue';
+import Avatar from '../components/shared/Avatar.vue';
 import Version from '../components/Version.vue';
-import { RecordPageName, LoginPageName } from '../router';
+import { WeightPageName, LoginPageName } from '../router';
 import { isAdmin, isLoggedIn } from '../services/utils';
 </script>

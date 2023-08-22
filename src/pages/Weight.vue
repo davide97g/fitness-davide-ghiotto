@@ -10,8 +10,7 @@
 		<a-tab-pane :key="year" :tab="year" v-for="year in YEARS">
 			<a-tabs v-model:activeKey="activeMonth">
 				<a-tab-pane :key="month" :tab="month" v-for="month in MONTHS">
-					{{ month }}
-					- {{ year }}
+					<WeightHeatmap :month="String(getMonthNumber(month))" :year="year" />
 				</a-tab-pane>
 			</a-tabs>
 		</a-tab-pane>
@@ -24,18 +23,18 @@
 <script setup lang="ts">
 import { SettingOutlined } from '@ant-design/icons-vue/lib/icons';
 import { ref } from 'vue';
-import Avatar from '../components/Avatar.vue';
+import Avatar from '../components/shared/Avatar.vue';
 import Settings from '../components/Settings/Settings.vue';
 import PrimaryButton from '../components/shared/PrimaryButton.vue';
-import { MONTHS, YEARS } from '../services/utils';
+import { MONTHS, YEARS, getMonthNumber } from '../services/utils';
 import { NewRecordPageName, router } from '../router';
+import WeightHeatmap from '../components/Weight/WeightHeatmap.vue';
 
 const activeMonth = ref(MONTHS[new Date().getMonth()]);
 const activeYear = ref(new Date().getFullYear().toString());
 
 // *** side menu
-
-const sideMenuVisible = ref<boolean>(false);
+const sideMenuVisible = ref(false);
 </script>
 
 <style scoped lang="scss">

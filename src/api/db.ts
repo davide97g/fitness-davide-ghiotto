@@ -12,7 +12,7 @@ import {
 	where,
 } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
-import { NewWeightRecord, WeightRecord } from '../models/weight';
+import { WeightRecord } from '../models/weight';
 
 const db = getFirestore();
 
@@ -80,16 +80,12 @@ export const DataBaseClient = {
 				callback(weights);
 			});
 		},
-		async create(weightRecord: NewWeightRecord): Promise<WeightRecord> {
+		async create(weightRecord: WeightRecord): Promise<void> {
 			try {
-				const res = await addDoc(
-					collection(db, this.collection),
+				await setDoc(
+					doc(collection(db, this.collection), weightRecord.id),
 					JSON.parse(JSON.stringify(weightRecord))
 				);
-				return {
-					id: res.id,
-					...weightRecord,
-				};
 			} catch (err) {
 				console.error(err);
 				throw err;
@@ -119,12 +115,10 @@ export const DataBaseClient = {
 				throw err;
 			}
 		},
-		async bulkAdd(weights: NewWeightRecord[]): Promise<WeightRecord[]> {
+		async bulkAdd(weights: WeightRecord[]): Promise<void[]> {
 			try {
-				const transactionsCreation: Promise<WeightRecord>[] = [];
-				weights.forEach(weightRecord =>
-					transactionsCreation.push(this.create(weightRecord))
-				);
+				const transactionsCreation: Promise<void>[] = [];
+				weights.forEach(weightRecord => this.create(weightRecord));
 				return await Promise.all(transactionsCreation);
 			} catch (err) {
 				console.error(err);

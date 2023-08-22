@@ -10,7 +10,7 @@ import { useUserStore } from '../stores/user';
 export const HomePageName = 'Home';
 export const LoginPageName = 'Login';
 export const ProfilePageName = 'Profile';
-export const RecordPageName = 'Record';
+export const WeightPageName = 'Weight';
 export const NewRecordPageName = 'NewRecord';
 
 const loggedInGuard = async (
@@ -48,12 +48,13 @@ const routes = [
 	},
 	{
 		path: '/weight',
-		name: RecordPageName,
-		component: () => import('../pages/Record.vue'),
+		name: WeightPageName,
+		component: () => import('../pages/Weight.vue'),
 		beforeEnter: loggedInGuard,
 	},
 	{
 		path: '/new-weight',
+		props: true,
 		name: NewRecordPageName,
 		component: () => import('../pages/NewWeight.vue'),
 		beforeEnter: loggedInGuard,

@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { FirebaseAuth } from '../api/auth';
-import Avatar from '../components/Avatar.vue';
+import Avatar from '../components/shared/Avatar.vue';
 import { HomePageName } from '../router';
 import { useUserStore } from '../stores/user';
 </script>

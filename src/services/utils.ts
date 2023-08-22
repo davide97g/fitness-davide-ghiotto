@@ -78,3 +78,5 @@ export const MONTHS = [
 	'November',
 	'December',
 ];
+
+export const getMonthNumber = (month: string) => MONTHS.indexOf(month);

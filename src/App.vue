@@ -7,7 +7,6 @@ setIsLoading(false);
 
 <template>
 	<ProgressBar />
-
 	<div id="router-view" :class="{ mobile: isMobile }">
 		<router-view />
 	</div>

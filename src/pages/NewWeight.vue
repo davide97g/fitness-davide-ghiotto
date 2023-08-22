@@ -29,24 +29,37 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DataBaseClient } from '../api/db';
-import { NewWeightRecord } from '../models/weight';
+import { WeightRecord } from '../models/weight';
 import { setIsLoading } from '../services/utils';
 import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { router } from '../router';
 
 const date = ref<Dayjs>();
 const weight = ref(0);
 
+const urlSearchParams = new URLSearchParams(window.location.search);
+const dateParam = urlSearchParams.get('date');
+const avgParam = urlSearchParams.get('avg');
+if (dateParam) date.value = dayjs(dateParam);
+if (avgParam) weight.value = Number(avgParam);
+
 const addNewWeightRecord = () => {
-	const newWeightRecord: NewWeightRecord = {
+	const day = String(date.value?.date());
+	const month = String(date.value?.month());
+	const year = String(date.value?.year());
+	const id = `${year}-${month}-${day}`;
+	const newWeightRecord: WeightRecord = {
+		id,
 		weight: weight.value,
-		day: String(date.value?.day()),
-		month: String(date.value?.month()),
-		year: String(date.value?.year()),
+		day,
+		month,
+		year,
 	};
 	setIsLoading(true);
 	DataBaseClient.WeightRecord.create(newWeightRecord)
-		.then(res => {
-			console.log(res);
+		.then(() => {
+			router.push({ name: 'Weight' });
 		})
 		.catch(err => {
 			console.log(err);

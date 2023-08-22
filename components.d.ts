@@ -33,7 +33,7 @@ declare module '@vue/runtime-core' {
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
-    Avatar: typeof import('./src/components/Avatar.vue')['default']
+    Avatar: typeof import('./src/components/shared/Avatar.vue')['default']
     Button: typeof import('./src/components/shared/Button.vue')['default']
     CategoriesSettings: typeof import('./src/components/Family/Settings/CategoriesSettings.vue')['default']
     Category: typeof import('./src/components/Badges/Category.vue')['default']
@@ -57,6 +57,10 @@ declare module '@vue/runtime-core' {
     UpdateTagPopup: typeof import('./src/components/Family/Settings/UpdateTagPopup.vue')['default']
     UpdateTransactionPopup: typeof import('./src/components/Family/UpdateTransactionPopup.vue')['default']
     Version: typeof import('./src/components/Version.vue')['default']
+    WeightCell: typeof import('./src/components/Weight/WeightCell.vue')['default']
+    WeightHeatmap: typeof import('./src/components/Weight/WeightHeatmap.vue')['default']
+    WeightItem: typeof import('./src/components/Weight/WeightItem.vue')['default']
+    WeightItems: typeof import('./src/components/Weight/WeightItems.vue')['default']
     YearStatsPopup: typeof import('./src/components/Family/YearStatsPopup.vue')['default']
   }
 }

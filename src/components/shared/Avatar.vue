@@ -26,9 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { getPhotoURL, isLoggedIn } from '../services/utils';
-import { useUserStore } from '../stores/user';
-import { ProfilePageName } from '../router/index';
+import { getPhotoURL, isLoggedIn } from '../../services/utils';
+import { useUserStore } from '../../stores/user';
+import { ProfilePageName } from '../../router/index';
 
 const props = withDefaults(
 	defineProps<{
