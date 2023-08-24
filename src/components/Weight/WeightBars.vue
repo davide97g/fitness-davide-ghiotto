@@ -1,19 +1,29 @@
 <template>
-	<div style="display: flex; flex-wrap: wrap; gap: 9px">
-		<div v-for="day in days" :key="day" @click="onCellClick(day)">
-			<div v-if="getRecordFromDay(day)" class="day" :class="getColorClassFromRecord(day)">
-				{{ getRecordFromDay(day).weight }}
-			</div>
-			<div v-else class="day empty-day">
-				{{ day }}
-			</div>
+	<!-- center this div horizontally even when it goes out of screen -->
+	<div
+		style="
+			display: flex;
+			gap: 10px;
+			overflow-x: auto;
+			justify-content: center;
+			position: relative;
+			&::-webkit-scrollbar {
+				display: none;
+			}
+		"
+	>
+		<div v-for="day in days" :key="day" class="bar-container">
+			<div
+				class="day-bar"
+				:class="{ ...getColorClassFromRecord(day), selected: day === selected }"
+			/>
+			{{ day }}
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { router, NewRecordPageName } from '../../router';
 import { WeightRecord } from '../../models/weight';
 import { useUserStore } from '../../stores/user';
 
@@ -28,12 +38,14 @@ const { days, month, year, weightRecordsMap } = defineProps<{
 
 const userStore = useUserStore();
 
+const avgWeight = ref<number>(0);
+
+const selected = ref<string>(new Date().getDate().toString());
+
 const getRecordFromDay = (day: string) => {
 	const id = `${year}-${month}-${day}`;
 	return weightRecordsMap[id];
 };
-
-const avgWeight = ref<number>(0);
 
 if (userStore.user?.settings) {
 	const { goalWeight, lowestAllowedWeight } = userStore.user.settings;
@@ -45,26 +57,24 @@ if (userStore.user?.settings) {
 
 const getColorClassFromRecord = (day: string) => {
 	const record = getRecordFromDay(day);
+	if (!record) return { empty: true };
 	const diff = avgWeight.value - record.weight;
 	// TODO: gradient from red to green with min and max
 	if (diff > 0) return { red: true };
 	else if (diff < 0) return { green: true };
 };
-
-const onCellClick = (day: string) => {
-	router.push({
-		name: NewRecordPageName,
-		query: {
-			date: `${year}-${parseInt(month) + 1}-${day}`,
-			weight: getRecordFromDay(day)?.weight,
-		},
-	});
-};
 </script>
 
 <style scoped lang="scss">
-.day {
-	width: 45px;
+.bar-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 5px;
+}
+.day-bar {
+	width: 10px;
 	height: 45px;
 	border-radius: 10px;
 	display: flex;
@@ -87,10 +97,15 @@ const onCellClick = (day: string) => {
 		background-color: gray;
 		font-weight: 600;
 	}
-}
-.empty-day {
-	background-color: #e0e0e0;
-	color: gray;
-	font-weight: 200;
+	&.selected {
+		width: 13px;
+		border: 1px solid #5a83a9;
+		height: 95px;
+	}
+	&.empty {
+		background-color: #e0e0e0;
+		color: gray;
+		font-weight: 200;
+	}
 }
 </style>

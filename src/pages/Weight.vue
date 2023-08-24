@@ -10,7 +10,7 @@
 		<a-tab-pane :key="year" :tab="year" v-for="year in YEARS">
 			<a-tabs v-model:activeKey="activeMonth">
 				<a-tab-pane :key="month" :tab="month" v-for="month in MONTHS">
-					<WeightHeatmap :month="String(getMonthNumber(month))" :year="year" />
+					<WeightMonthYear :month="String(getMonthNumber(month))" :year="year" />
 				</a-tab-pane>
 			</a-tabs>
 		</a-tab-pane>
@@ -28,7 +28,6 @@ import Settings from '../components/Settings/Settings.vue';
 import PrimaryButton from '../components/shared/PrimaryButton.vue';
 import { MONTHS, YEARS, getMonthNumber } from '../services/utils';
 import { NewRecordPageName, router } from '../router';
-import WeightHeatmap from '../components/Weight/WeightHeatmap.vue';
 
 const activeMonth = ref(MONTHS[new Date().getMonth()]);
 const activeYear = ref(new Date().getFullYear().toString());
