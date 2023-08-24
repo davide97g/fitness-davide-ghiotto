@@ -1,43 +1,36 @@
-import {
-	getAuth,
-	signInWithPopup,
-	GoogleAuthProvider,
-	signOut,
-	onAuthStateChanged,
-} from 'firebase/auth';
+import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useUserStore } from '../stores/user';
 import { HomePageName, router } from '../router';
 import { setIsLoading } from '../services/utils';
 
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-
-const firebaseConfig = {
-	apiKey: 'AIzaSyAJxoJsYk8XAyFwxMk8fCmh2F8IaCxncg0',
-	authDomain: 'test-davide-ghiotto.firebaseapp.com',
-	projectId: 'test-davide-ghiotto',
-	storageBucket: 'test-davide-ghiotto.appspot.com',
-	messagingSenderId: '507675193838',
-	appId: '1:507675193838:web:0ad24c3dd4afea80545eff',
-	measurementId: 'G-4T0KJZ8R1K',
-};
-
-const app = initializeApp(firebaseConfig);
-getAnalytics(app);
-
 const provider = new GoogleAuthProvider();
-const auth = getAuth();
+
+import { DataBaseClient } from './db';
+import { auth } from '../config/firebase';
 
 export const checkUserIsLoggedIn = () => {
 	return new Promise((resolve, reject) => {
 		setIsLoading(true);
 		onAuthStateChanged(
 			auth,
-			async user => {
+			async fireUser => {
 				setIsLoading(false);
-				useUserStore().setUser(user);
-				if (user) resolve(user);
-				else reject(false);
+				if (fireUser) {
+					DataBaseClient.User.getUserOrCreateOne({
+						uid: fireUser.uid,
+						email: fireUser.email || '',
+						displayName: fireUser.displayName || '',
+						photoURL: fireUser.photoURL || '',
+					})
+						.then(user => {
+							useUserStore().setUser(user);
+							resolve(user);
+						})
+						.catch(err => {
+							console.log(err);
+							resolve(fireUser);
+						});
+				} else reject(false);
 			},
 			err => {
 				useUserStore().setUser(null);

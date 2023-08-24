@@ -24,7 +24,7 @@ const indicator = h(LoadingOutlined, {
 	text-align: center;
 	z-index: 1000;
 	padding-top: 70px;
-	background: rgba(0, 0, 0, 0.25);
+	background: rgba(0, 0, 0, 0.1);
 	&.not-loading {
 		display: none;
 	}

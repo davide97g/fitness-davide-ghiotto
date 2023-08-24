@@ -40,9 +40,9 @@ const weight = ref(0);
 
 const urlSearchParams = new URLSearchParams(window.location.search);
 const dateParam = urlSearchParams.get('date');
-const avgParam = urlSearchParams.get('avg');
+const weightParam = urlSearchParams.get('weight');
 if (dateParam) date.value = dayjs(dateParam);
-if (avgParam) weight.value = Number(avgParam);
+if (weightParam) weight.value = Number(weightParam);
 
 const addNewWeightRecord = () => {
 	const day = String(date.value?.date());

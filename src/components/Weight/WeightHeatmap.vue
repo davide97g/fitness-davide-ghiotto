@@ -68,7 +68,7 @@ const onCellClick = (day: string) => {
 		name: NewRecordPageName,
 		query: {
 			date: `${year}-${parseInt(month) + 1}-${day}`,
-			avg: avgWeight.value,
+			weight: getRecordFromDay(day)?.weight,
 		},
 	});
 };
@@ -83,12 +83,14 @@ const onCellClick = (day: string) => {
 	justify-content: center;
 	align-items: center;
 	&.red {
-		background-color: red;
+		background-color: #a63d1c;
 		font-weight: 600;
+		color: white;
 	}
 	&.green {
-		background-color: green;
+		background-color: #63a063;
 		font-weight: 600;
+		color: white;
 	}
 	&.gray {
 		background-color: gray;

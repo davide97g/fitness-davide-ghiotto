@@ -1,10 +1,7 @@
-import { User } from 'firebase/auth';
 import {
-	addDoc,
 	collection,
 	deleteDoc,
 	getDocs,
-	getFirestore,
 	onSnapshot,
 	query,
 	setDoc,
@@ -13,8 +10,9 @@ import {
 } from 'firebase/firestore';
 import { doc, getDoc } from 'firebase/firestore';
 import { WeightRecord } from '../models/weight';
-
-const db = getFirestore();
+import { User } from '../models/user';
+import { setIsLoading } from '../services/utils';
+import { db } from '../config/firebase';
 
 export const DataBaseClient = {
 	User: {
@@ -25,16 +23,41 @@ export const DataBaseClient = {
 			if (docSnap.exists()) return docSnap.data() as User;
 			else return null;
 		},
-		async getUserOrCreateOne(firebaseUser: User): Promise<User> {
-			const docRef = doc(db, 'users', firebaseUser.uid);
+		async getUserOrCreateOne(user: User): Promise<User> {
+			const docRef = doc(db, 'users', user.uid);
 			const docSnap = await getDoc(docRef);
 
 			if (docSnap.exists()) return docSnap.data() as User;
-			else return this.createNewUser(firebaseUser);
+			else return this.createNewUser(user);
 		},
-		async createNewUser(firebaseUser: User): Promise<User> {
-			await setDoc(doc(collection(db, 'users'), firebaseUser.uid), firebaseUser);
-			return firebaseUser;
+		async createNewUser(user: User): Promise<User> {
+			await setDoc(doc(collection(db, 'users'), user.uid), user);
+			return user;
+		},
+		async updateUser(user: User): Promise<boolean> {
+			setIsLoading(true);
+			const { uid, email, displayName, photoURL, settings } = user;
+			try {
+				setDoc(
+					doc(collection(db, 'users'), user.uid),
+					{
+						uid,
+						email,
+						displayName,
+						photoURL,
+						settings,
+					},
+					{
+						merge: true,
+					}
+				);
+				return true;
+			} catch (err) {
+				console.error(err);
+				return false;
+			} finally {
+				setIsLoading(false);
+			}
 		},
 		async getAllUsers(): Promise<User[]> {
 			const querySnapshot = await getDocs(collection(db, 'users'));
@@ -53,11 +76,19 @@ export const DataBaseClient = {
 			if (filters?.month) constraints.push(where('month', '==', filters.month));
 			if (filters?.year) constraints.push(where('year', '==', filters.year));
 			const q = query(collection(db, this.collection), ...constraints);
-			const querySnapshot = await getDocs(q);
-			return querySnapshot.docs.map(doc => ({
-				id: doc.id,
-				...doc.data(),
-			})) as WeightRecord[];
+			setIsLoading(true);
+			try {
+				const querySnapshot = await getDocs(q);
+				return querySnapshot.docs.map(doc => ({
+					id: doc.id,
+					...doc.data(),
+				})) as WeightRecord[];
+			} catch (err) {
+				console.error(err);
+				throw err;
+			} finally {
+				setIsLoading(false);
+			}
 		},
 		async getRT(
 			callback: (weights: WeightRecord[]) => void,
@@ -81,6 +112,7 @@ export const DataBaseClient = {
 			});
 		},
 		async create(weightRecord: WeightRecord): Promise<void> {
+			setIsLoading(true);
 			try {
 				await setDoc(
 					doc(collection(db, this.collection), weightRecord.id),
@@ -89,9 +121,12 @@ export const DataBaseClient = {
 			} catch (err) {
 				console.error(err);
 				throw err;
+			} finally {
+				setIsLoading(false);
 			}
 		},
 		async update(weightRecord: WeightRecord): Promise<boolean> {
+			setIsLoading(true);
 			try {
 				await setDoc(
 					doc(collection(db, this.collection), weightRecord.id),
@@ -104,15 +139,20 @@ export const DataBaseClient = {
 			} catch (err) {
 				console.error(err);
 				throw err;
+			} finally {
+				setIsLoading(false);
 			}
 		},
 		async delete(transactionId: string): Promise<boolean> {
+			setIsLoading(true);
 			try {
 				await deleteDoc(doc(collection(db, this.collection), transactionId));
 				return true;
 			} catch (err) {
 				console.error(err);
 				throw err;
+			} finally {
+				setIsLoading(false);
 			}
 		},
 		async bulkAdd(weights: WeightRecord[]): Promise<void[]> {

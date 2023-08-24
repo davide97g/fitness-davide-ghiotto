@@ -1,5 +1,5 @@
-import { User } from 'firebase/auth';
 import { defineStore } from 'pinia';
+import { User } from '../models/user';
 
 const ADMINS = ['70DafDh0t0VJ6kwfES1WPYd9s723', 'RnGor26IYQM6vwRwq12vH1gKC1m1'];
 
