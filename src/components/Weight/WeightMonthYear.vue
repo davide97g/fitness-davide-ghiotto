@@ -8,17 +8,21 @@
 			overflow-y: auto;
 		"
 	>
-		<a-typography-text>Heatmap</a-typography-text>
 		<WeightHeatmap
 			:days="days"
 			:month="month"
 			:year="year"
 			:weightRecordsMap="weightRecordsMap"
 		/>
-		<a-typography-text>Bars</a-typography-text>
 		<WeightBars :days="days" :month="month" :year="year" :weightRecordsMap="weightRecordsMap" />
-		<!-- <a-typography-text>Chart</a-typography-text>
-		<apexchart width="100%" type="line" :options="chartOptions" :series="series"></apexchart> -->
+		<apexchart
+			width="100%"
+			height="200px"
+			style="padding-right: 1rem"
+			type="line"
+			:options="chartOptions"
+			:series="series"
+		></apexchart>
 	</div>
 </template>
 
@@ -40,6 +44,35 @@ const weightRecordsMap = ref<{
 	[key: string]: WeightRecord;
 }>({});
 
+const chartOptions = {
+	chart: {
+		id: 'vuechart-example',
+		toolbar: {
+			show: false,
+		},
+	},
+	xaxis: {
+		labels: {
+			show: false,
+		},
+	},
+	dataLabels: {
+		enabled: false,
+	},
+	stroke: {
+		curve: 'smooth',
+	},
+	legend: {
+		show: false,
+	},
+};
+const series = ref<
+	{
+		name: string;
+		data: number[];
+	}[]
+>([]);
+
 DataBaseClient.WeightRecord.get({
 	month,
 	year,
@@ -48,28 +81,17 @@ DataBaseClient.WeightRecord.get({
 		records.forEach(record => {
 			weightRecordsMap.value[record.id] = record;
 		});
+		series.value.push({
+			name: 'Weight',
+			data: days.map(day => {
+				const record = weightRecordsMap.value[`${year}-${month}-${day}`];
+				return record ? record.weight : 0;
+			}),
+		});
 	})
 	.catch(err => {
 		console.error(err);
 	});
-
-const chartOptions = {
-	chart: {
-		id: 'vuechart-example',
-	},
-	xaxis: {
-		categories: days,
-	},
-	stroke: {
-		curve: 'smooth',
-	},
-};
-const series = [
-	{
-		name: 'series-1',
-		data: [30, 40, 35, 50, 49, 60, 70, 91],
-	},
-];
 </script>
 
 <style scoped lang="scss"></style>
