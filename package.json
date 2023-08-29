@@ -12,9 +12,13 @@
 		"prepare": "husky install",
 		"pwa": "npm run build && npm run pwa:preview",
 		"pwa:icons": "npx vue-pwa-asset-generator -a ./src/assets/img/logo.png -o public/img/icons --no-manifest",
-		"pwa:preview": "vite --config vite.config.js preview"
+		"pwa:preview": "vite --config vite.config.js preview",
+		"build:ios": "yarn build && npx cap copy ios",
+		"open:ios": "npx cap open ios"
 	},
 	"dependencies": {
+		"@capacitor/core": "^5.3.0",
+		"@capacitor/ios": "^5.3.0",
 		"ant-design-vue": "^3.2.15",
 		"apexcharts": "^3.41.1",
 		"chart.js": "^4.1.2",
@@ -27,6 +31,7 @@
 		"vue3-apexcharts": "^1.4.4"
 	},
 	"devDependencies": {
+		"@capacitor/cli": "^5.3.0",
 		"@vitejs/plugin-vue": "^3.2.0",
 		"husky": "^8.0.0",
 		"typescript": "^4.6.4",
