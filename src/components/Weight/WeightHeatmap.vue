@@ -1,5 +1,8 @@
 <template>
 	<div style="display: flex; flex-wrap: wrap; gap: 9px">
+		<div v-for="day in emptyDays" :key="day" class="day gray">
+			{{ getDayFromPreviousMonth(day) }}
+		</div>
 		<div v-for="day in days" :key="day" @click="onCellClick(day)">
 			<div v-if="getRecordFromDay(day)" class="day" :class="getColorClassFromRecord(day)">
 				{{ getRecordFromDay(day).weight }}
@@ -25,6 +28,17 @@ const { days, month, year, weightRecordsMap } = defineProps<{
 		[key: string]: WeightRecord;
 	};
 }>();
+
+const weekdayOfFirstDay = new Date(`${year}-${parseInt(month) + 1}-01`).getDay();
+console.info('weekdayOfFirstDay', weekdayOfFirstDay, new Date(`${year}-${parseInt(month) + 1}-01`));
+const emptyDays = Array.from({ length: weekdayOfFirstDay - 1 }, (_, i) => i + 1);
+
+const getDayFromPreviousMonth = (day: number) => {
+	const previousMonth = parseInt(month) === 0 ? 12 : parseInt(month);
+	const previousYear = parseInt(month) === 0 ? parseInt(year) - 1 : parseInt(year);
+	const daysInPreviousMonth = new Date(previousYear, previousMonth, 0).getDate();
+	return daysInPreviousMonth - emptyDays.length + day;
+};
 
 const userStore = useUserStore();
 

@@ -69,7 +69,7 @@ const chartOptions = {
 const series = ref<
 	{
 		name: string;
-		data: number[];
+		data: (number | undefined)[];
 	}[]
 >([]);
 
@@ -85,7 +85,7 @@ DataBaseClient.WeightRecord.get({
 			name: 'Weight',
 			data: days.map(day => {
 				const record = weightRecordsMap.value[`${year}-${month}-${day}`];
-				return record ? record.weight : 0;
+				return record ? record.weight : undefined;
 			}),
 		});
 	})
